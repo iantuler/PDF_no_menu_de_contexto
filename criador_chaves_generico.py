@@ -40,11 +40,22 @@ def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_pyth
     reg.SetValue(pasta_key,'', reg.REG_SZ, nome_no_menu_contexto)
 
     comando_chave = reg.CreateKey(pasta_key, r"command")
+
+    #Dessa forma rodamos com um arquivo .exe
+    if com_sys_argv:
+        reg.SetValue(comando_chave, '', reg.REG_SZ, '"' + cwd + '\\' + path_script_python + '"' + '"%1"')
+    else:
+        reg.SetValue(comando_chave, '', reg.REG_SZ, '"' + cwd + '\\' + path_script_python + '"')
+
+
+    #Abaixo é caso queira rodar com script.py
+    #Nesse caso tu precisa rodar o script como argumento do python.exe "argumento"
+    '''
     if com_sys_argv:
         reg.SetValue(comando_chave, '', reg.REG_SZ, hidden_terminal + ' "' + cwd + '\\' + path_script_python + '"' + ' "%1" ')
     else:
         reg.SetValue(comando_chave, '', reg.REG_SZ, hidden_terminal + ' "' + cwd + '\\' + path_script_python + '"')
-
+    '''
 
 #Variáveis do script de criação de chaves
 
@@ -57,9 +68,9 @@ def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_pyth
 #Caso seja sem arquivo selecionado extensao= Directory\\Background\\shell
 
 chaves_internas = [
-        {"nome_pasta":"&mesclar_pdf", "nome_script": "&PDF Combinar", "script_path": "combinar_pdf.py",
+        {"nome_pasta":"&mesclar_pdf", "nome_script": "&PDF Combinar", "script_path": "tkinter_combinador.exe",
          "extensao":"Directory\\Background\\shell", "com_%1": False},
-        {"nome_pasta": "&converter_em_pdf", "nome_script": "&PDF Converter em pdf", "script_path": "converter_imagem_pdf.py",
+        {"nome_pasta": "&converter_em_pdf", "nome_script": "&PDF Converter em pdf", "script_path": "converter_imagem_pdf.exe",
          "extensao": "*\\shell", "com_%1": True
          }
 ]
