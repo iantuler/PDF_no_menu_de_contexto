@@ -21,7 +21,7 @@ def get_python_exe():
         return None
 
 #Antigo main_cadastrar_chaves
-def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_python, extensao):
+def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_python, extensao, com_sys_argv):
     # Get path of current working directory and python.exe
     cwd = os.getcwd()
 
@@ -40,7 +40,10 @@ def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_pyth
     reg.SetValue(pasta_key,'', reg.REG_SZ, nome_no_menu_contexto)
 
     comando_chave = reg.CreateKey(pasta_key, r"command")
-    reg.SetValue(comando_chave, '', reg.REG_SZ, hidden_terminal + ' "' + cwd + '\\' + path_script_python + '"' + ' "%1" ')
+    if com_sys_argv:
+        reg.SetValue(comando_chave, '', reg.REG_SZ, hidden_terminal + ' "' + cwd + '\\' + path_script_python + '"' + ' "%1" ')
+    else:
+        reg.SetValue(comando_chave, '', reg.REG_SZ, hidden_terminal + ' "' + cwd + '\\' + path_script_python + '"')
 
 
 #Variáveis do script de criação de chaves
@@ -55,13 +58,13 @@ def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_pyth
 
 chaves_internas = [
         {"nome_pasta":"&mesclar_pdf", "nome_script": "&PDF Combinar", "script_path": "combinar_pdf.py",
-         "extensao":"Directory\\Background\\shell"},
+         "extensao":"Directory\\Background\\shell", "com_%1": False},
         {"nome_pasta": "&converter_em_pdf", "nome_script": "&PDF Converter em pdf", "script_path": "converter_imagem_pdf.py",
-         "extensao": "*\\shell"
+         "extensao": "*\\shell", "com_%1": True
          }
 ]
 
 #main
 
 for chaves in chaves_internas:
-    main_cadastrar_chave(chaves["nome_pasta"], chaves["nome_script"], chaves["script_path"], chaves["extensao"])
+    main_cadastrar_chave(chaves["nome_pasta"], chaves["nome_script"], chaves["script_path"], chaves["extensao"], chaves["com_%1"])
