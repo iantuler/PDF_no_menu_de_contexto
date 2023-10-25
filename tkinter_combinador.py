@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from tkinter.font import Font
 from PyPDF2 import PdfMerger
+import configparser
 
 def encontrar_z_pdf(diretorio):
     '''
@@ -47,9 +48,28 @@ def botao_comando():
     :return:
     '''
     selected_files = [file for file, var in zip(pdf_files, checkboxes) if var.get() == 1]
-    diretorio = os.getcwd()
-    merge_pdfs(diretorio, selected_files)
+
+    global directory
+    merge_pdfs(directory, selected_files)
     root.quit()
+
+#Vamos fazer de forma que usuário consiga salvar os valores de output
+
+def save_last_entry_value(entry_value):
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    config['LastEntry'] = {'value': entry_value}
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
+
+def get_last_entry_value():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    return config.get('LastEntry', 'value', fallback='z.pdf')
+
+def update_entry_value():
+    new_value = output_filename_entry.get()
+    save_last_entry_value(new_value)
 
 
 #Cria o objeto Tkinter
@@ -58,7 +78,9 @@ root.title("Combinador PDF")
 root.configure(background="#0233f7")
 
 #Diretório onde se encontra os pdfs, substituimos por os.getcwd()
+
 directory = os.getcwd()  # Change this to your directory path
+
 #Retorna uma lista com todos pdf's
 pdf_files = encontrar_z_pdf(directory)
 #Lista vazia que serão adicionados os vários pdfs
@@ -83,12 +105,33 @@ for file in pdf_files:
     label.pack(side="right")
     checkbox.pack(side="right")
 
-output_filename_entry = tk.Entry(root)
-output_filename_entry.insert(0, "z.pdf")
-output_filename_entry.pack()
+#Last entry está relacionado a salvar o ultimo nome de pdf utilizado
+#Get_last é a função que utiliza o config.ini pra realizar essa config
+last_entry_value = get_last_entry_value()
 
+#Vamo colocar um frame para o save e output
+frame = tk.Frame(root)
+frame.pack()
+
+#output filename = o nome que o pdf será salvo
+output_filename_entry = tk.Entry(frame)
+output_filename_entry.insert(0, last_entry_value)
+output_filename_entry.pack(side= "right")
+
+
+save_button = tk.Button(frame, text="Save", command=update_entry_value)
+save_button.pack(side="right")
+
+#E um frame apenas pro combinar sozinho
+frame_combinar= tk.Frame()
+frame_combinar.pack()
+
+#Botao de combinar!
 font_button = Font(weight="bold")
-generate_button = tk.Button(root, text="Combinar!!", command=botao_comando, background="white", font=font_button)
+generate_button = tk.Button(frame_combinar, text="Combinar!!", command=botao_comando, background="white", font=font_button)
 generate_button.pack()
+
+#Pra colocar o tab no combinar
+generate_button.focus_set()
 
 root.mainloop()
