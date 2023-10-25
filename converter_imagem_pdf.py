@@ -18,7 +18,7 @@ path = "\\".join(sys.argv[1:])
 image_path = path
 pdf_path = os.path.join(cwd, "z.pdf")
 
-#image_to_pdf(image_path, pdf_path)
+image_to_pdf(image_path, pdf_path)
 
 '''with open("C:\\Users\\iantu\\Documents\\Projetos Orulo\\PDFcontexto\\Teste aqui\\informacoes.txt", "w") as arquivo:
     arquivo.write("\\".join(os.sys.argv[1:]))

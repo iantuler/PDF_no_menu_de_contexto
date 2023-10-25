@@ -55,7 +55,7 @@ def main_cadastrar_chave(nome_pasta_reg, nome_no_menu_contexto, path_script_pyth
 
 chaves_internas = [
         {"nome_pasta":"&mesclar_pdf", "nome_script": "&PDF Combinar", "script_path": "combinar_pdf.py",
-         "extensao":".pdf\\shell"},
+         "extensao":"Directory\\Background\\shell"},
         {"nome_pasta": "&converter_em_pdf", "nome_script": "&PDF Converter em pdf", "script_path": "converter_imagem_pdf.py",
          "extensao": "*\\shell"
          }
