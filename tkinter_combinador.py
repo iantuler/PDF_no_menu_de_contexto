@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from tkinter.font import Font
 from PyPDF2 import PdfMerger
 
 def encontrar_z_pdf(diretorio):
@@ -19,7 +20,7 @@ def encontrar_z_pdf(diretorio):
     return pdf_files
 
 
-def merge_pdfs(cwd, input_pdfs, output_pdf):
+def merge_pdfs(cwd, input_pdfs):
     '''
     :param cwd: caminho do working directory onde estão os pdf's
     :param input_pdfs: Lista contendo os pdf's ex: [caminho//exemplo//pdf1.pdf, caminho//exemplo//pdf2.pdf]
@@ -30,6 +31,10 @@ def merge_pdfs(cwd, input_pdfs, output_pdf):
 
     for pdf in input_pdfs:
         pdf_merger.append(pdf)
+
+    output_pdf = output_filename_entry.get()
+    if not(output_pdf.endswith(".pdf")):
+        output_pdf= output_pdf + ".pdf"
 
     with open(os.path.join(cwd, output_pdf), 'wb') as output:
         pdf_merger.write(output)
@@ -42,18 +47,18 @@ def botao_comando():
     :return:
     '''
     selected_files = [file for file, var in zip(pdf_files, checkboxes) if var.get() == 1]
-    if len(selected_files)<2:
-        root.quit()
-    merge_pdfs("C:\\Users\\iantu\\Documents\\Projetos Orulo\\PDFcontexto\\Teste aqui", selected_files, "combinado.pdf")
+    diretorio = os.getcwd()
+    merge_pdfs(diretorio, selected_files)
     root.quit()
 
 
 #Cria o objeto Tkinter
 root = tk.Tk()
 root.title("Combinador PDF")
+root.configure(background="#0233f7")
 
 #Diretório onde se encontra os pdfs, substituimos por os.getcwd()
-directory = "C:\\Users\\iantu\\Documents\\Projetos Orulo\\PDFcontexto\\Teste aqui"  # Change this to your directory path
+directory = os.getcwd()  # Change this to your directory path
 #Retorna uma lista com todos pdf's
 pdf_files = encontrar_z_pdf(directory)
 #Lista vazia que serão adicionados os vários pdfs
@@ -67,18 +72,23 @@ for file in pdf_files:
     checkboxes.append(var)
 
     #Cria um frame onde será adicionado tanto a checkbox quanto o label
-    frame = tk.Frame(root)
+    frame = tk.Frame(root, bg="lightblue")
     frame.pack()
 
     #Cria o label com o nome do file e também cria o checkboxe associando a variável var criada anteriormente no FRAME criado acima
-    label = tk.Label(frame, text=os.path.basename(file))
-    checkbox = tk.Checkbutton(frame, variable=var)
+    label = tk.Label(frame, text=os.path.basename(file), background="lightblue")
+    checkbox = tk.Checkbutton(frame, variable=var, background="lightblue")
 
     #Empacota o label e checkbox dentro do frame recém criado
     label.pack(side="right")
     checkbox.pack(side="right")
 
-generate_button = tk.Button(root, text="Combinar!!", command=botao_comando)
+output_filename_entry = tk.Entry(root)
+output_filename_entry.insert(0, "z.pdf")
+output_filename_entry.pack()
+
+font_button = Font(weight="bold")
+generate_button = tk.Button(root, text="Combinar!!", command=botao_comando, background="white", font=font_button)
 generate_button.pack()
 
 root.mainloop()
