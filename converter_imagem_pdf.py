@@ -13,10 +13,31 @@ def image_to_pdf(image_path, pdf_path):
     c.showPage()
     c.save()
 
+def qual_output(cwd):
+    lista_arquivos = os.listdir(cwd)
+    if not ("z.pdf") in lista_arquivos:
+        return "z.pdf"
+    else:
+        for k in range(1,10):
+            nome_z = "z" + str(k) + ".pdf"
+            if not(nome_z in lista_arquivos):
+                return nome_z
+
+        return "zz.pdf"
+
+
 cwd = os.getcwd()
 path = "\\".join(sys.argv[1:])
+
+#Testes
+# cwd = rf"C:\Users\iantu\Documents\Projetos Orulo\PDFcontexto\Teste aqui"
+# path = rf"C:\Users\iantu\Documents\Projetos Orulo\PDFcontexto\Teste aqui\merhy.jpeg"
+
 image_path = path
-pdf_path = os.path.join(cwd, "z.pdf")
+
+#Tenho que adicionar aqui a possibilidade de criação de z1, z2, z3...
+
+pdf_path = os.path.join(cwd, qual_output(cwd))
 
 image_to_pdf(image_path, pdf_path)
 
